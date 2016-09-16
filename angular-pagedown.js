@@ -26,6 +26,7 @@
           placeholder: '@',
           showPreview: '@',
           help: '&',
+          attachFiles: '&',
           insertImage: '&',
           editorClass: '=?',
           editorRows: '@',
@@ -33,7 +34,7 @@
           previewContent: '=?'
         },
         link: function(scope, element, attrs, ngModel) {
-          var editor, editorElement, editorRows, editorUniqueId, help, newElement, placeholder, previewHiddenStyle;
+          var editor, editorElement, editorRows, editorUniqueId, newElement, options, placeholder, previewHiddenStyle;
           scope.changed = function() {
             ngModel.$setDirty();
             scope.$parent.$eval(attrs.ngChange);
@@ -49,12 +50,19 @@
           editorRows = attrs.editorRows || '10';
           newElement = $compile('<div>' + '<div class="wmd-panel">' + '<div id="wmd-button-bar-' + editorUniqueId + '"></div>' + '<textarea id="wmd-input-' + editorUniqueId + '" placeholder="' + placeholder + '" ng-model="ngModel"' + ' ng-change="changed()"' + ' rows="' + editorRows + '" ' + (scope.editorClass ? 'ng-class="editorClass"' : 'class="wmd-input"') + '>' + '</textarea>' + '</div>' + '<div id="wmd-preview-' + editorUniqueId + '" style="' + previewHiddenStyle + '"' + ' ' + (scope.previewClass ? 'ng-class="previewClass"' : 'class="wmd-panel wmd-preview"') + '>' + '</div>' + '</div>')(scope);
           element.append(newElement);
-          help = angular.isFunction(scope.help) ? scope.help : (function() {
+          options = {
+            helpButton: {}
+          };
+          options.helpButton.handler = angular.isFunction(scope.help) ? scope.help : (function() {
             $window.open('http://daringfireball.net/projects/markdown/syntax', '_blank');
           });
-          editor = new Markdown.Editor(converter, '-' + editorUniqueId, {
-            handler: help
-          });
+          if (angular.isFunction(scope.attachFiles)) {
+            options.attachFilesButton = {};
+            options.attachFilesButton.handler = scope.attachFiles;
+            options.attachFilesButton.title = "attach files";
+            console.log("hmm");
+          }
+          editor = new Markdown.Editor(converter, '-' + editorUniqueId, options);
           editorElement = angular.element(document.getElementById('wmd-input-' + editorUniqueId));
           editorElement.val(scope.ngModel);
           converter.hooks.chain('postConversion', function(text) {
