@@ -66,7 +66,6 @@ angular.module('ui.pagedown', []).directive('pagedownEditor', [
 #          options.attachFilesButton.handler = scope.insertImage
           options.attachFilesButton.title = "attach files"
   
-          console.log "hmm"
                               
         #create editor
         editor = new (Markdown.Editor)(converter, '-' + editorUniqueId, options)

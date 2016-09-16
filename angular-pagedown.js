@@ -60,7 +60,6 @@
             options.attachFilesButton = {};
             options.attachFilesButton.handler = scope.attachFiles;
             options.attachFilesButton.title = "attach files";
-            console.log("hmm");
           }
           editor = new Markdown.Editor(converter, '-' + editorUniqueId, options);
           editorElement = angular.element(document.getElementById('wmd-input-' + editorUniqueId));
